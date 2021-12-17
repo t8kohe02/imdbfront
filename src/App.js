@@ -1,8 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import './App.css';
-import {useState, useEffect} from 'react'
-
+import {useState} from 'react'
 
 
 export default function App() {
@@ -10,22 +9,13 @@ export default function App() {
   const url = 'http://localhost/imdbback/'
   const [name, setName] = useState('');
   const [searchterm, setSearchterm] = useState([]);
-  const [namesubmit, setNamesubmit] = useState('');
  
 
   
   function handleSubmit(e) {
 
-    e.preventDefault();
-    setNamesubmit(name)
-   
-  };
-
-  useEffect(() =>{
-    if (name !== null){
-      
-    
-    axios.get(url + 'searchbyterm.php/' + namesubmit)
+    e.preventDefault();    
+    axios.get(url + 'searchbyterm.php/' + name)
     .then((response) => {
       const json = response.data;
       setSearchterm(json);
@@ -35,19 +25,20 @@ export default function App() {
       } else {
         alert(error.response.data.error);
       }
-    })}
-  },[])
+    })
+  }
+
   console.log(searchterm)
 
   return (
     <div className="container">
       <h2>Etsi elokuvia hakusanalla</h2>
       <div>
-  
-                <input className="form-control me-2" type="search" placeholder="Haku" aria-label="Search" 
-                onClick={e => setName(e.target.value)}/>
-              <button className="btn btn-outline-success" type="submit" onClick={handleSubmit}>Etsi</button>
-  
+        <form onSubmit={handleSubmit}>
+        <input className="form-control me-2" type="search" placeholder="Haku" aria-label="Search" 
+        onChange={e => setName(e.target.value)}/>
+        <button className="btn btn-outline-success" type="submit" >Etsi</button>
+        </form>
         </div>                                             
        <div>
         <ul>
@@ -58,6 +49,3 @@ export default function App() {
       </div> 
     </div>
   )} 
-
-
-
