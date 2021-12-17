@@ -36,28 +36,28 @@ export default function App() {
         alert(error.response.data.error);
       }
     })}
-  },[namesubmit])
+  },[])
   console.log(searchterm)
 
+  return (
+    <div className="container">
+      <h2>Etsi elokuvia hakusanalla</h2>
+      <div>
   
+                <input className="form-control me-2" type="search" placeholder="Haku" aria-label="Search" 
+                onClick={e => setName(e.target.value)}/>
+              <button className="btn btn-outline-success" type="submit" onClick={handleSubmit}>Etsi</button>
+  
+        </div>                                             
+       <div>
+        <ul>
+        {searchterm.map(item => (
+          <li>Elokuvan nimi: {item.primary_title}<br /> Genre: {item.genre}</li>       
+        ))}                                                                                 
+        </ul>
+      </div> 
+    </div>
+  )} 
 
 
-return (
-  <div className="container">
-    <h2>Etsi elokuvia hakusanalla</h2>
-    <div>
-      <form className="d-flex" >
-              <input className="form-control me-2" type="search" placeholder="Haku" aria-label="Search" 
-              onClick={e => setName(e.target.value)}/>
-            <button className="btn btn-outline-success" type="submit" onClick={handleSubmit}>Etsi</button>
-            </form>
-      </div>                                             
-     <div>
-      <ul>
-      {searchterm.map(item => (
-        <li>Elokuvan nimi: {item.primary_title}<br /> Genre: {item.genre}</li>       
-      ))}                                                                                 
-      </ul>
-    </div> 
-  </div>
-)}
+
