@@ -1,50 +1,63 @@
 import React from 'react'
 import axios from 'axios'
 import './App.css';
-import {useState, UseEffect} from 'react'
-import uuid from 'uuid/package.json'
+import {useState, useEffect} from 'react'
+
 
 
 export default function App() {
 
   const url = 'http://localhost/imdbback/'
-  const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
+  const [name, setName] = useState('');
+  const [searchterm, setSearchterm] = useState([]);
+  const [namesubmit, setNamesubmit] = useState('');
+ 
 
-  const search = e => {
+  
+  function handleSubmit(e) {
+
     e.preventDefault();
-    if(searchTerm === ''){
-      return;
-    }else{
-      axios.get(url + '/searchbyterm.php?search=' + searchTerm
-      ).then((response) => {
-        const json = response.data;
-        console.log(json);
-        setResults(json);
-      }). catch(e => console.log(e))
-    }
-  }
+    setNamesubmit(name)
+   
+  };
+
+  useEffect(() =>{
+    if (name !== null){
+      
+    
+    axios.get(url + 'searchbyterm.php/' + namesubmit)
+    .then((response) => {
+      const json = response.data;
+      setSearchterm(json);
+    }).catch (error => {
+      if (error.response === undefined){
+        alert(error);
+      } else {
+        alert(error.response.data.error);
+      }
+    })}
+  },[namesubmit])
+  console.log(searchterm)
+
+  
+
+
 return (
   <div className="container">
     <h2>Etsi elokuvia hakusanalla</h2>
-    <label className="myForm label-text">Syötä hakusana :</label>
-    <input className="myForm" onChange={(e => {setSearchTerm(e.target.value)})}
-    name="search" placeholder="genre,nimi..."/>
-    <button className="myForm" onClick={search}>Etsi</button>
     <div>
+      <form className="d-flex" >
+              <input className="form-control me-2" type="search" placeholder="Haku" aria-label="Search" 
+              onClick={e => setName(e.target.value)}/>
+            <button className="btn btn-outline-success" type="submit" onClick={handleSubmit}>Etsi</button>
+            </form>
+      </div>                                             
+     <div>
       <ul>
-        {results.map(item => (
-          <li key={uuid()}>Nimi: {item.primary_title}<br /> Genre: {item.genre}</li>
-        ))}
+      {searchterm.map(item => (
+        <li>Elokuvan nimi: {item.primary_title}<br /> Genre: {item.genre}</li>       
+      ))}                                                                                 
       </ul>
-    </div>
-    <div>
-      <h2>Montaako tyylilajia elokuvista löytyy ?</h2>
-      <button className="myForm" onClick={}>Etsi</button>
-    </div>
+    </div> 
   </div>
-
-)
-}
-
-
+)}
